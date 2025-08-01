@@ -1,42 +1,40 @@
 const express = require('express');
 const router = express.Router();
+const {
+  getMedicos,
+  getMedicoById,
+  createMedico,
+  updateMedico,
+  deleteMedico,
+  getAgendaMedico,
+  getDisponibilidadMedico,
+  searchMedicos
+} = require('../controllers/medicoController');
 
-// @route   GET /api/medicos
-// @desc    Obtener todos los médicos
-// @access  Public
-router.get('/', async (req, res) => {
-    try {
-        res.json({ message: 'Obtener médicos - Por implementar', data: [] });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// Rutas públicas (sin autenticación por ahora)
 
-// @route   GET /api/medicos/:id
-// @desc    Obtener médico por ID
-// @access  Public
-router.get('/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        res.json({ message: `Obtener médico ${id} - Por implementar` });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// GET /api/medicos - Obtener todos los médicos
+router.get('/', getMedicos);
 
-// @route   GET /api/medicos/:id/horarios
-// @desc    Obtener horarios disponibles de un médico
-// @access  Public
-router.get('/:id/horarios', async (req, res) => {
-    try {
-        const { id } = req.params;
-        res.json({ message: `Obtener horarios del médico ${id} - Por implementar`, data: [] });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// GET /api/medicos/search - Buscar médicos
+router.get('/search', searchMedicos);
+
+// GET /api/medicos/:id - Obtener médico por ID
+router.get('/:id', getMedicoById);
+
+// GET /api/medicos/:id/agenda - Obtener agenda del médico
+router.get('/:id/agenda', getAgendaMedico);
+
+// GET /api/medicos/:id/disponibilidad - Obtener disponibilidad del médico
+router.get('/:id/disponibilidad', getDisponibilidadMedico);
+
+// POST /api/medicos - Crear nuevo médico
+router.post('/', createMedico);
+
+// PUT /api/medicos/:id - Actualizar médico
+router.put('/:id', updateMedico);
+
+// DELETE /api/medicos/:id - Eliminar médico (soft delete)
+router.delete('/:id', deleteMedico);
 
 module.exports = router;

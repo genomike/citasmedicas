@@ -1,54 +1,48 @@
 const express = require('express');
 const router = express.Router();
+const {
+  getCitas,
+  getCitaById,
+  createCita,
+  updateCita,
+  confirmarCita,
+  cancelarCita,
+  reprogramarCita,
+  deleteCita,
+  getCitasHoy,
+  searchCitas
+} = require('../controllers/citaController');
 
-// @route   GET /api/citas
-// @desc    Obtener todas las citas
-// @access  Private
-router.get('/', async (req, res) => {
-    try {
-        res.json({ message: 'Obtener citas - Por implementar', data: [] });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// Rutas públicas (sin autenticación por ahora)
 
-// @route   POST /api/citas
-// @desc    Crear nueva cita
-// @access  Private
-router.post('/', async (req, res) => {
-    try {
-        res.json({ message: 'Crear cita - Por implementar' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// GET /api/citas - Obtener todas las citas
+router.get('/', getCitas);
 
-// @route   PUT /api/citas/:id
-// @desc    Actualizar cita
-// @access  Private
-router.put('/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        res.json({ message: `Actualizar cita ${id} - Por implementar` });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// GET /api/citas/hoy - Obtener citas de hoy
+router.get('/hoy', getCitasHoy);
 
-// @route   DELETE /api/citas/:id
-// @desc    Cancelar cita
-// @access  Private
-router.delete('/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        res.json({ message: `Cancelar cita ${id} - Por implementar` });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// GET /api/citas/search - Buscar citas
+router.get('/search', searchCitas);
+
+// GET /api/citas/:id - Obtener cita por ID
+router.get('/:id', getCitaById);
+
+// POST /api/citas - Crear nueva cita
+router.post('/', createCita);
+
+// PUT /api/citas/:id - Actualizar cita
+router.put('/:id', updateCita);
+
+// PUT /api/citas/:id/confirmar - Confirmar cita
+router.put('/:id/confirmar', confirmarCita);
+
+// PUT /api/citas/:id/cancelar - Cancelar cita
+router.put('/:id/cancelar', cancelarCita);
+
+// PUT /api/citas/:id/reprogramar - Reprogramar cita
+router.put('/:id/reprogramar', reprogramarCita);
+
+// DELETE /api/citas/:id - Eliminar cita
+router.delete('/:id', deleteCita);
 
 module.exports = router;

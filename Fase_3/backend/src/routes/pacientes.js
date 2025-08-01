@@ -1,42 +1,48 @@
 const express = require('express');
 const router = express.Router();
+const {
+  getPacientes,
+  getPacienteById,
+  getPacienteByDni,
+  createPaciente,
+  updatePaciente,
+  deletePaciente,
+  getHistorialMedico,
+  getCitasPaciente,
+  searchPacientes,
+  updateHistorialMedico
+} = require('../controllers/pacienteController');
 
-// @route   GET /api/pacientes
-// @desc    Obtener todos los pacientes
-// @access  Private (Admin/Personal)
-router.get('/', async (req, res) => {
-    try {
-        res.json({ message: 'Obtener pacientes - Por implementar', data: [] });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// Rutas públicas (sin autenticación por ahora)
 
-// @route   GET /api/pacientes/:id
-// @desc    Obtener paciente por ID
-// @access  Private
-router.get('/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        res.json({ message: `Obtener paciente ${id} - Por implementar` });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// GET /api/pacientes - Obtener todos los pacientes
+router.get('/', getPacientes);
 
-// @route   PUT /api/pacientes/:id
-// @desc    Actualizar datos del paciente
-// @access  Private
-router.put('/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        res.json({ message: `Actualizar paciente ${id} - Por implementar` });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// GET /api/pacientes/search - Buscar pacientes
+router.get('/search', searchPacientes);
+
+// GET /api/pacientes/dni/:dni - Obtener paciente por DNI
+router.get('/dni/:dni', getPacienteByDni);
+
+// GET /api/pacientes/:id - Obtener paciente por ID
+router.get('/:id', getPacienteById);
+
+// GET /api/pacientes/:id/historial - Obtener historial médico del paciente
+router.get('/:id/historial', getHistorialMedico);
+
+// GET /api/pacientes/:id/citas - Obtener citas del paciente
+router.get('/:id/citas', getCitasPaciente);
+
+// POST /api/pacientes - Crear nuevo paciente
+router.post('/', createPaciente);
+
+// PUT /api/pacientes/:id - Actualizar paciente
+router.put('/:id', updatePaciente);
+
+// PUT /api/pacientes/:id/historial - Actualizar historial médico
+router.put('/:id/historial', updateHistorialMedico);
+
+// DELETE /api/pacientes/:id - Eliminar paciente (soft delete)
+router.delete('/:id', deletePaciente);
 
 module.exports = router;

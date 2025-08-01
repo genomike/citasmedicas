@@ -1,44 +1,35 @@
 const express = require('express');
 const router = express.Router();
+const {
+  getEspecialidades,
+  getEspecialidadById,
+  createEspecialidad,
+  updateEspecialidad,
+  deleteEspecialidad,
+  getHorariosDisponibles,
+  searchEspecialidades
+} = require('../controllers/especialidadController');
 
-// @route   GET /api/especialidades
-// @desc    Obtener todas las especialidades
-// @access  Public
-router.get('/', async (req, res) => {
-    try {
-        // Datos de ejemplo para desarrollo
-        const especialidades = [
-            { id: 1, nombre: 'Medicina General', descripcion: 'Atención médica general' },
-            { id: 2, nombre: 'Cardiología', descripcion: 'Especialista en corazón' },
-            { id: 3, nombre: 'Pediatría', descripcion: 'Atención médica para niños' },
-            { id: 4, nombre: 'Ginecología', descripcion: 'Salud femenina' },
-            { id: 5, nombre: 'Traumatología', descripcion: 'Huesos y articulaciones' }
-        ];
-        
-        res.json({ 
-            message: 'Especialidades obtenidas correctamente', 
-            data: especialidades 
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// Rutas públicas (sin autenticación por ahora)
 
-// @route   GET /api/especialidades/:id/medicos
-// @desc    Obtener médicos por especialidad
-// @access  Public
-router.get('/:id/medicos', async (req, res) => {
-    try {
-        const { id } = req.params;
-        res.json({ 
-            message: `Obtener médicos de especialidad ${id} - Por implementar`, 
-            data: [] 
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-});
+// GET /api/especialidades - Obtener todas las especialidades
+router.get('/', getEspecialidades);
 
+// GET /api/especialidades/search - Buscar especialidades
+router.get('/search', searchEspecialidades);
+
+// GET /api/especialidades/:id - Obtener especialidad por ID
+router.get('/:id', getEspecialidadById);
+
+// GET /api/especialidades/:id/horarios - Obtener horarios disponibles
+router.get('/:id/horarios', getHorariosDisponibles);
+
+// POST /api/especialidades - Crear nueva especialidad
+router.post('/', createEspecialidad);
+
+// PUT /api/especialidades/:id - Actualizar especialidad
+router.put('/:id', updateEspecialidad);
+
+// DELETE /api/especialidades/:id - Eliminar especialidad (soft delete)
+router.delete('/:id', deleteEspecialidad);
 module.exports = router;
