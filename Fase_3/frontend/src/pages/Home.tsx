@@ -1,121 +1,221 @@
 import React from 'react';
-import { 
-  Box, 
-  Typography, 
-  Button, 
-  Card, 
-  CardContent, 
+import {
   Container,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Alert,
+  Chip,
   Stack
 } from '@mui/material';
-import { 
-  CalendarToday, 
-  People, 
-  LocalHospital, 
-  AccessTime 
+import {
+  CalendarToday,
+  People,
+  LocalHospital,
+  BarChart,
+  Phone,
+  LocationOn,
+  Schedule,
+  Emergency
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
 
-  const features = [
+  const servicios = [
     {
-      icon: <CalendarToday color="primary" sx={{ fontSize: 40 }} />,
-      title: 'Programar Citas',
-      description: 'Reserva tu cita médica de forma rápida y sencilla, sin colas ni esperas.'
+      icon: <CalendarToday fontSize="large" />,
+      titulo: 'Gestionar Citas',
+      descripcion: 'Programa, consulta y gestiona tus citas médicas de forma sencilla',
+      ruta: '/citas',
+      color: '#1976d2'
     },
     {
-      icon: <People color="primary" sx={{ fontSize: 40 }} />,
-      title: 'Buscar Especialistas',
-      description: 'Encuentra el médico especialista que necesitas según tu condición.'
+      icon: <People fontSize="large" />,
+      titulo: 'Nuestros Médicos',
+      descripcion: 'Conoce a nuestro equipo médico y sus especialidades',
+      ruta: '/medicos',
+      color: '#2e7d32'
     },
     {
-      icon: <AccessTime color="primary" sx={{ fontSize: 40 }} />,
-      title: 'Horarios Flexibles',
-      description: 'Consulta disponibilidad en tiempo real y elige el horario que mejor te convenga.'
-    },
-    {
-      icon: <LocalHospital color="primary" sx={{ fontSize: 40 }} />,
-      title: 'Atención de Calidad',
-      description: 'Recibe atención médica de calidad en el Hospital Regional del Cusco.'
+      icon: <BarChart fontSize="large" />,
+      titulo: 'Panel de Control',
+      descripcion: 'Visualiza estadísticas y información del hospital',
+      ruta: '/estadisticas',
+      color: '#ed6c02'
     }
   ];
 
+  const informacionHospital = {
+    telefono: '+51 84-223366',
+    direccion: 'Av. de la Cultura 1380, San Blas, Cusco',
+    horarioAtencion: 'Lunes a Viernes: 7:00 AM - 7:00 PM',
+    emergencias: '24 horas los 365 días del año'
+  };
+
   return (
-    <Container maxWidth="lg">
-      {/* Hero Section */}
-      <Box sx={{ textAlign: 'center', py: 8 }}>
-        <Typography variant="h3" component="h1" gutterBottom color="primary">
-          Sistema de Gestión de Citas Médicas
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* Bienvenida */}
+      <Box textAlign="center" mb={4}>
+        <Typography variant="h3" component="h1" color="primary" gutterBottom>
+          Bienvenido al Sistema de Citas
         </Typography>
-        <Typography variant="h5" component="h2" color="text.secondary" paragraph>
+        <Typography variant="h5" color="textSecondary" gutterBottom>
           Hospital Regional del Cusco
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}>
-          Modernizamos la forma de agendar tus citas médicas. Ahora puedes programar, 
-          reprogramar y consultar tus citas desde la comodidad de tu hogar, 
-          sin necesidad de hacer largas colas.
+        <Typography variant="body1" color="textSecondary" paragraph>
+          Gestiona tus citas médicas de manera fácil y rápida desde cualquier dispositivo
         </Typography>
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
-          <Button 
-            variant="contained" 
-            size="large"
-            onClick={() => navigate('/login')}
-            sx={{ px: 4, py: 1.5 }}
-          >
-            Iniciar Sesión
-          </Button>
-          <Button 
-            variant="outlined" 
-            size="large"
-            sx={{ px: 4, py: 1.5 }}
-          >
-            Registrarse
-          </Button>
-        </Stack>
       </Box>
 
-      {/* Features Section */}
-      <Box sx={{ py: 8 }}>
-        <Typography variant="h4" component="h2" textAlign="center" gutterBottom>
-          Beneficios del Sistema
-        </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' }, gap: 3, mt: 4 }}>
-          {features.map((feature, index) => (
-            <Card key={index} sx={{ height: '100%', textAlign: 'center', p: 2 }}>
-              <CardContent>
-                <Box sx={{ mb: 2 }}>
-                  {feature.icon}
+      {/* Alerta PWA */}
+      <Alert 
+        severity="success" 
+        sx={{ mb: 4 }}
+        icon={<LocalHospital fontSize="inherit" />}
+      >
+        📱 <strong>Aplicación Web Progresiva (PWA)</strong> - Funciona sin conexión y se puede instalar en tu dispositivo
+      </Alert>
+
+      {/* Servicios principales */}
+      <Typography variant="h4" component="h2" color="primary" gutterBottom sx={{ mb: 3 }}>
+        Nuestros Servicios
+      </Typography>
+
+      <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))" gap={3} sx={{ mb: 5 }}>
+        {servicios.map((servicio, index) => (
+          <Card 
+            key={index}
+            elevation={3} 
+            sx={{ 
+              height: '100%', 
+              display: 'flex', 
+              flexDirection: 'column',
+              transition: 'transform 0.2s',
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: 6
+              }
+            }}
+          >
+            <CardContent sx={{ flexGrow: 1 }}>
+              <Box 
+                display="flex" 
+                alignItems="center" 
+                justifyContent="center" 
+                mb={2}
+                sx={{ color: servicio.color }}
+              >
+                {servicio.icon}
+              </Box>
+              <Typography variant="h5" component="h3" gutterBottom textAlign="center">
+                {servicio.titulo}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" textAlign="center">
+                {servicio.descripcion}
+              </Typography>
+            </CardContent>
+            <CardActions sx={{ justifyContent: 'center', pb: 2 }}>
+              <Button 
+                variant="contained" 
+                size="large"
+                onClick={() => navigate(servicio.ruta)}
+                sx={{ backgroundColor: servicio.color }}
+              >
+                Acceder
+              </Button>
+            </CardActions>
+          </Card>
+        ))}
+      </Box>
+
+      {/* Información del hospital */}
+      <Card elevation={3} sx={{ mb: 4 }}>
+        <CardContent>
+          <Typography variant="h4" component="h2" color="primary" gutterBottom>
+            Información del Hospital
+          </Typography>
+          
+          <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap={3}>
+            <Box>
+              <Stack spacing={2}>
+                <Box display="flex" alignItems="center" gap={2}>
+                  <Phone color="primary" />
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      Teléfono Principal
+                    </Typography>
+                    <Typography variant="body2">
+                      {informacionHospital.telefono}
+                    </Typography>
+                  </Box>
                 </Box>
-                <Typography variant="h6" component="h3" gutterBottom>
-                  {feature.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {feature.description}
-                </Typography>
-              </CardContent>
-            </Card>
-          ))}
-        </Box>
-      </Box>
 
-      {/* CTA Section */}
-      <Box sx={{ textAlign: 'center', py: 6, bgcolor: 'primary.main', color: 'white', borderRadius: 2, mb: 4 }}>
-        <Typography variant="h4" component="h2" gutterBottom>
-          ¿Listo para empezar?
+                <Box display="flex" alignItems="center" gap={2}>
+                  <LocationOn color="primary" />
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      Dirección
+                    </Typography>
+                    <Typography variant="body2">
+                      {informacionHospital.direccion}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Stack>
+            </Box>
+
+            <Box>
+              <Stack spacing={2}>
+                <Box display="flex" alignItems="center" gap={2}>
+                  <Schedule color="primary" />
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      Horario de Atención
+                    </Typography>
+                    <Typography variant="body2">
+                      {informacionHospital.horarioAtencion}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box display="flex" alignItems="center" gap={2}>
+                  <Emergency color="error" />
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight="bold" color="error">
+                      Emergencias
+                    </Typography>
+                    <Typography variant="body2">
+                      {informacionHospital.emergencias}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Stack>
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
+
+      {/* Especialidades destacadas */}
+      <Box textAlign="center">
+        <Typography variant="h5" component="h3" color="primary" gutterBottom>
+          Especialidades Médicas Disponibles
         </Typography>
-        <Typography variant="body1" sx={{ mb: 3 }}>
-          Únete a miles de pacientes que ya disfrutan de la comodidad de nuestro sistema digital.
-        </Typography>
-        <Button 
-          variant="contained" 
-          color="secondary" 
-          size="large"
-          onClick={() => navigate('/login')}
-        >
-          Programar Mi Primera Cita
-        </Button>
+        <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent="center" sx={{ mt: 2 }}>
+          {['Cardiología', 'Pediatría', 'Neurología', 'Ginecología', 'Traumatología', 'Medicina General'].map((especialidad) => (
+            <Chip 
+              key={especialidad}
+              label={especialidad}
+              variant="outlined"
+              color="primary"
+              sx={{ m: 0.5 }}
+            />
+          ))}
+        </Stack>
       </Box>
     </Container>
   );
