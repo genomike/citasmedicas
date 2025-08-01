@@ -1,0 +1,80 @@
+@startuml diagrama_despliegue
+!theme plain
+title Sistema de Gestión de Citas Médicas - Diagrama de Despliegue
+
+node "Dispositivos Cliente" {
+    artifact "Navegador Web" as Browser
+    artifact "App Móvil Android/iOS" as MobileApp
+}
+
+node "Load Balancer" as LB {
+    artifact "Nginx" as Nginx
+}
+
+node "Servidor Web 1" as Web1 {
+    artifact "Aplicación Web" as WebApp1
+    component "Node.js/Express" as NodeJS1
+}
+
+node "Servidor Web 2" as Web2 {
+    artifact "Aplicación Web" as WebApp2  
+    component "Node.js/Express" as NodeJS2
+}
+
+node "Servidor de Aplicaciones" as AppServer {
+    component "API REST" as API
+    component "Servicios de Negocio" as BusinessServices
+    artifact "Spring Boot/Java" as SpringBoot
+}
+
+node "Servidor de Base de Datos Principal" as DBMaster {
+    database "MySQL Master" as MySQLMaster
+}
+
+node "Servidor de Base de Datos Réplica" as DBSlave {
+    database "MySQL Slave" as MySQLSlave
+}
+
+node "Servidor de Cache" as CacheServer {
+    database "Redis Cache" as Redis
+}
+
+node "Servidor de Archivos" as FileServer {
+    artifact "Almacenamiento de Documentos" as FileStorage
+}
+
+cloud "Servicios Externos" {
+    component "Servicio SMS" as SMS
+    component "Servicio Email" as EmailService
+    component "Pasarela de Pagos" as PaymentGateway
+    component "API Seguro Médico" as InsuranceAPI
+}
+
+' Conexiones
+Browser --> LB : HTTPS (443)
+MobileApp --> LB : HTTPS (443)
+
+LB --> Web1 : HTTP (8080)
+LB --> Web2 : HTTP (8080)
+
+Web1 --> AppServer : HTTP (8081)
+Web2 --> AppServer : HTTP (8081)
+
+AppServer --> DBMaster : TCP (3306)
+AppServer --> MySQLSlave : TCP (3306)
+AppServer --> Redis : TCP (6379)
+AppServer --> FileServer : HTTP (8082)
+
+AppServer --> SMS : HTTPS
+AppServer --> EmailService : HTTPS
+AppServer --> PaymentGateway : HTTPS
+AppServer --> InsuranceAPI : HTTPS
+
+DBMaster --> MySQLSlave : "Replicación"
+
+note right of LB : "Distribución de carga\nentre servidores web"
+note right of DBMaster : "Base de datos principal\npara escrituras"
+note right of MySQLSlave : "Base de datos para\nconsultas de solo lectura"
+note right of Redis : "Cache de sesiones\ny datos frecuentes"
+
+@enduml

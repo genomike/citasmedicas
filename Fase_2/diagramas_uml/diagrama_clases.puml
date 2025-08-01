@@ -1,0 +1,156 @@
+@startuml diagrama_clases
+!theme plain
+title Sistema de Gestión de Citas Médicas - Diagrama de Clases
+
+class Usuario {
+    - id: Long
+    - email: String
+    - password: String
+    - fechaRegistro: Date
+    - activo: Boolean
+    + iniciarSesion(): Boolean
+    + cerrarSesion(): void
+    + actualizarPerfil(): Boolean
+}
+
+class Paciente {
+    - numeroHistoria: String
+    - nombres: String
+    - apellidos: String
+    - dni: String
+    - fechaNacimiento: Date
+    - telefono: String
+    - direccion: String
+    - genero: String
+    + registrarPaciente(): Boolean
+    + actualizarDatos(): Boolean
+    + consultarHistorial(): List<Cita>
+}
+
+class PersonalAdministrativo {
+    - codigo: String
+    - nombres: String
+    - apellidos: String
+    - cargo: String
+    - area: String
+    + gestionarCitas(): Boolean
+    + generarReportes(): Boolean
+    + verificarSeguro(): Boolean
+}
+
+class Medico {
+    - cmp: String
+    - nombres: String
+    - apellidos: String
+    - especialidad: String
+    - telefono: String
+    - consultorio: String
+    + consultarAgenda(): List<Cita>
+    + modificarDisponibilidad(): Boolean
+    + atenderPaciente(): Boolean
+}
+
+class Especialidad {
+    - id: Long
+    - nombre: String
+    - descripcion: String
+    - duracionConsulta: Integer
+    - precio: Double
+    + obtenerMedicos(): List<Medico>
+}
+
+class Cita {
+    - id: Long
+    - fecha: Date
+    - hora: Time
+    - estado: EstadoCita
+    - observaciones: String
+    - fechaRegistro: Date
+    - motivoConsulta: String
+    + programar(): Boolean
+    + reprogramar(): Boolean
+    + cancelar(): Boolean
+    + confirmar(): Boolean
+}
+
+class HorarioAtencion {
+    - id: Long
+    - diaSemana: String
+    - horaInicio: Time
+    - horaFin: Time
+    - disponible: Boolean
+    + verificarDisponibilidad(): Boolean
+    + bloquearHorario(): Boolean
+}
+
+class SeguroMedico {
+    - id: Long
+    - nombre: String
+    - tipo: String
+    - cobertura: Double
+    - activo: Boolean
+    + verificarCobertura(): Boolean
+    + validarVigencia(): Boolean
+}
+
+class HistoriaClinica {
+    - id: Long
+    - numero: String
+    - fechaCreacion: Date
+    - observaciones: String
+    + crearHistoria(): Boolean
+    + actualizarHistoria(): Boolean
+    + consultarHistoria(): String
+}
+
+enum EstadoCita {
+    PROGRAMADA
+    CONFIRMADA
+    CANCELADA
+    REPROGRAMADA
+    ATENDIDA
+    NO_ASISTIO
+}
+
+class Pago {
+    - id: Long
+    - monto: Double
+    - fechaPago: Date
+    - metodoPago: String
+    - comprobante: String
+    - estado: String
+    + procesarPago(): Boolean
+    + generarComprobante(): String
+}
+
+class Notificacion {
+    - id: Long
+    - mensaje: String
+    - tipo: String
+    - fechaEnvio: Date
+    - leida: Boolean
+    + enviarNotificacion(): Boolean
+    + marcarLeida(): Boolean
+}
+
+' Relaciones de herencia
+Usuario <|-- Paciente
+Usuario <|-- PersonalAdministrativo
+Usuario <|-- Medico
+
+' Relaciones de asociación
+Paciente ||--o{ Cita : "solicita"
+Medico ||--o{ Cita : "atiende"
+PersonalAdministrativo ||--o{ Cita : "gestiona"
+Medico }o--|| Especialidad : "pertenece"
+Medico ||--o{ HorarioAtencion : "tiene"
+Paciente }o--o| SeguroMedico : "posee"
+Paciente ||--|| HistoriaClinica : "tiene"
+Cita ||--o| Pago : "genera"
+Cita }o--|| EstadoCita : "tiene"
+Usuario ||--o{ Notificacion : "recibe"
+
+' Relaciones de composición
+Cita *-- EstadoCita
+
+@enduml

@@ -1,0 +1,55 @@
+@startuml secuencia_registro_cita
+!theme plain
+title Registro de Cita Médica - Diagrama de Secuencia
+
+actor "Paciente" as P
+participant "Interfaz Web/Móvil" as UI
+participant "Controlador Citas" as CC
+participant "Servicio Autenticación" as SA
+participant "Servicio Citas" as SC
+participant "Servicio Médicos" as SM
+participant "Servicio Seguro" as SS
+participant "Base de Datos" as BD
+participant "Servicio Notificaciones" as SN
+
+P -> UI: Acceder al sistema
+UI -> SA: Verificar autenticación
+SA -> BD: Consultar usuario
+BD --> SA: Datos usuario
+SA --> UI: Usuario autenticado
+
+P -> UI: Seleccionar especialidad
+UI -> SM: Buscar médicos por especialidad
+SM -> BD: Consultar médicos disponibles
+BD --> SM: Lista médicos
+SM --> UI: Médicos disponibles
+
+P -> UI: Seleccionar médico y fecha
+UI -> SC: Verificar disponibilidad
+SC -> BD: Consultar horarios disponibles
+BD --> SC: Horarios libres
+SC --> UI: Disponibilidad confirmada
+
+P -> UI: Confirmar datos de la cita
+UI -> CC: Procesar registro de cita
+
+alt Paciente tiene seguro médico
+    CC -> SS: Verificar seguro médico
+    SS -> BD: Consultar seguro
+    BD --> SS: Datos seguro
+    SS --> CC: Seguro válido
+end
+
+CC -> SC: Crear nueva cita
+SC -> BD: Guardar cita
+BD --> SC: Cita registrada
+SC --> CC: Confirmación
+
+CC -> SN: Enviar notificación
+SN -> P: SMS/Email confirmación
+SN -> BD: Registrar notificación enviada
+
+CC --> UI: Cita registrada exitosamente
+UI --> P: Mostrar confirmación y datos de cita
+
+@enduml

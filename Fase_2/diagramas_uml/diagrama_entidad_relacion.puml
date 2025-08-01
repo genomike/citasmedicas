@@ -1,0 +1,143 @@
+@startuml diagrama_entidad_relacion
+!theme plain
+title Sistema de Gestión de Citas Médicas - Diagrama Entidad-Relación
+
+entity "usuarios" {
+    * id : BIGINT <<PK>>
+    --
+    * email : VARCHAR(100) <<UK>>
+    * password : VARCHAR(255)
+    * fecha_registro : TIMESTAMP
+    * activo : BOOLEAN
+    * tipo_usuario : ENUM('PACIENTE','MEDICO','ADMIN')
+}
+
+entity "pacientes" {
+    * id : BIGINT <<PK>>
+    --
+    * usuario_id : BIGINT <<FK>>
+    * numero_historia : VARCHAR(20) <<UK>>
+    * nombres : VARCHAR(100)
+    * apellidos : VARCHAR(100)
+    * dni : VARCHAR(8) <<UK>>
+    * fecha_nacimiento : DATE
+    * telefono : VARCHAR(15)
+    * direccion : TEXT
+    * genero : ENUM('M','F','O')
+    seguro_id : BIGINT <<FK>>
+}
+
+entity "medicos" {
+    * id : BIGINT <<PK>>
+    --
+    * usuario_id : BIGINT <<FK>>
+    * cmp : VARCHAR(20) <<UK>>
+    * nombres : VARCHAR(100)
+    * apellidos : VARCHAR(100)
+    * telefono : VARCHAR(15)
+    * consultorio : VARCHAR(50)
+    * especialidad_id : BIGINT <<FK>>
+}
+
+entity "personal_administrativo" {
+    * id : BIGINT <<PK>>
+    --
+    * usuario_id : BIGINT <<FK>>
+    * codigo : VARCHAR(20) <<UK>>
+    * nombres : VARCHAR(100)
+    * apellidos : VARCHAR(100)
+    * cargo : VARCHAR(50)
+    * area : VARCHAR(50)
+}
+
+entity "especialidades" {
+    * id : BIGINT <<PK>>
+    --
+    * nombre : VARCHAR(100) <<UK>>
+    * descripcion : TEXT
+    * duracion_consulta : INTEGER
+    * precio : DECIMAL(10,2)
+}
+
+entity "citas" {
+    * id : BIGINT <<PK>>
+    --
+    * paciente_id : BIGINT <<FK>>
+    * medico_id : BIGINT <<FK>>
+    * fecha : DATE
+    * hora : TIME
+    * estado : ENUM('PROGRAMADA','CONFIRMADA','CANCELADA','REPROGRAMADA','ATENDIDA','NO_ASISTIO')
+    * motivo_consulta : TEXT
+    * observaciones : TEXT
+    * fecha_registro : TIMESTAMP
+    admin_id : BIGINT <<FK>>
+}
+
+entity "horarios_atencion" {
+    * id : BIGINT <<PK>>
+    --
+    * medico_id : BIGINT <<FK>>
+    * dia_semana : ENUM('LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO','DOMINGO')
+    * hora_inicio : TIME
+    * hora_fin : TIME
+    * disponible : BOOLEAN
+}
+
+entity "seguros_medicos" {
+    * id : BIGINT <<PK>>
+    --
+    * nombre : VARCHAR(100) <<UK>>
+    * tipo : VARCHAR(50)
+    * cobertura : DECIMAL(5,2)
+    * activo : BOOLEAN
+}
+
+entity "historias_clinicas" {
+    * id : BIGINT <<PK>>
+    --
+    * paciente_id : BIGINT <<FK>>
+    * numero : VARCHAR(20) <<UK>>
+    * fecha_creacion : TIMESTAMP
+    * observaciones : TEXT
+}
+
+entity "pagos" {
+    * id : BIGINT <<PK>>
+    --
+    * cita_id : BIGINT <<FK>>
+    * monto : DECIMAL(10,2)
+    * fecha_pago : TIMESTAMP
+    * metodo_pago : ENUM('EFECTIVO','TARJETA','TRANSFERENCIA')
+    * comprobante : VARCHAR(100)
+    * estado : ENUM('PENDIENTE','PAGADO','CANCELADO')
+}
+
+entity "notificaciones" {
+    * id : BIGINT <<PK>>
+    --
+    * usuario_id : BIGINT <<FK>>
+    * mensaje : TEXT
+    * tipo : ENUM('SMS','EMAIL','PUSH')
+    * fecha_envio : TIMESTAMP
+    * leida : BOOLEAN
+}
+
+' Relaciones
+usuarios ||--o| pacientes : "puede ser"
+usuarios ||--o| medicos : "puede ser"
+usuarios ||--o| personal_administrativo : "puede ser"
+usuarios ||--o{ notificaciones : "recibe"
+
+pacientes }o--o| seguros_medicos : "posee"
+pacientes ||--|| historias_clinicas : "tiene"
+pacientes ||--o{ citas : "solicita"
+
+medicos }o--|| especialidades : "pertenece a"
+medicos ||--o{ horarios_atencion : "tiene"
+medicos ||--o{ citas : "atiende"
+
+personal_administrativo ||--o{ citas : "gestiona"
+
+citas ||--o| pagos : "genera"
+
+@enduml

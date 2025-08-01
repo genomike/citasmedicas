@@ -1,0 +1,71 @@
+@startuml diagrama_actividades
+!theme plain
+title Proceso de Registro de Cita Médica - Diagrama de Actividades
+
+|Paciente|
+start
+:Acceder al sistema;
+:Iniciar sesión;
+
+|Sistema|
+if (¿Usuario autenticado?) then (No)
+    |Paciente|
+    :Registrarse en el sistema;
+    :Completar datos personales;
+    |Sistema|
+    :Crear cuenta de usuario;
+else (Sí)
+endif
+
+|Paciente|
+:Buscar médico o especialidad;
+
+|Sistema|
+:Mostrar lista de médicos disponibles;
+
+|Paciente|
+:Seleccionar médico;
+:Elegir fecha deseada;
+
+|Sistema|
+:Verificar disponibilidad de horarios;
+
+if (¿Horarios disponibles?) then (No)
+    :Mostrar fechas alternativas;
+    |Paciente|
+    :Seleccionar nueva fecha;
+else (Sí)
+endif
+
+|Paciente|
+:Seleccionar hora específica;
+:Indicar motivo de consulta;
+
+|Sistema|
+if (¿Paciente tiene seguro?) then (Sí)
+    :Verificar cobertura del seguro;
+    if (¿Seguro válido?) then (No)
+        :Solicitar pago particular;
+        |Paciente|
+        :Realizar pago;
+    else (Sí)
+        :Aprobar cobertura;
+    endif
+else (No)
+    :Solicitar pago particular;
+    |Paciente|
+    :Realizar pago;
+endif
+
+|Sistema|
+:Registrar cita en la base de datos;
+:Generar número de cita;
+:Enviar confirmación por SMS/Email;
+:Actualizar agenda del médico;
+
+|Paciente|
+:Recibir confirmación de cita;
+
+stop
+
+@enduml

@@ -1,0 +1,95 @@
+@startuml diagrama_componentes
+!theme plain
+title Sistema de Gestión de Citas Médicas - Diagrama de Componentes
+
+package "Aplicación Cliente" {
+    component [Aplicación Web] as WebApp
+    component [Aplicación Móvil] as MobileApp
+    component [Interfaz de Usuario] as UI
+}
+
+package "Capa de Presentación" {
+    component [API Gateway] as Gateway
+    component [Controlador Web] as WebController
+    component [Controlador REST API] as APIController
+}
+
+package "Capa de Negocio" {
+    component [Servicio de Autenticación] as AuthService
+    component [Servicio de Citas] as CitasService
+    component [Servicio de Médicos] as MedicosService
+    component [Servicio de Pacientes] as PacientesService
+    component [Servicio de Notificaciones] as NotifService
+    component [Servicio de Pagos] as PagosService
+    component [Servicio de Reportes] as ReportesService
+}
+
+package "Capa de Datos" {
+    component [Repositorio de Usuarios] as UserRepo
+    component [Repositorio de Citas] as CitasRepo
+    component [Repositorio de Médicos] as MedicosRepo
+    component [Repositorio de Pacientes] as PacientesRepo
+}
+
+package "Capa de Persistencia" {
+    database "Base de Datos MySQL" as DB
+    component [Cache Redis] as Cache
+    component [Almacenamiento de Archivos] as FileStorage
+}
+
+package "Servicios Externos" {
+    component [Servicio SMS] as SMS
+    component [Servicio Email] as Email
+    component [Pasarela de Pagos] as PaymentGateway
+    component [Servicio de Seguro] as InsuranceService
+}
+
+' Conexiones Cliente
+WebApp --> Gateway : HTTPS
+MobileApp --> Gateway : HTTPS
+UI --> WebApp
+UI --> MobileApp
+
+' Conexiones Presentación
+Gateway --> WebController
+Gateway --> APIController
+
+' Conexiones Negocio
+WebController --> AuthService
+WebController --> CitasService
+WebController --> MedicosService
+WebController --> PacientesService
+
+APIController --> AuthService
+APIController --> CitasService
+APIController --> MedicosService
+APIController --> PacientesService
+APIController --> NotifService
+APIController --> PagosService
+APIController --> ReportesService
+
+' Conexiones entre Servicios
+CitasService --> NotifService
+CitasService --> PagosService
+PagosService --> PaymentGateway
+NotifService --> SMS
+NotifService --> Email
+PacientesService --> InsuranceService
+
+' Conexiones Datos
+AuthService --> UserRepo
+CitasService --> CitasRepo
+MedicosService --> MedicosRepo
+PacientesService --> PacientesRepo
+
+' Conexiones Persistencia
+UserRepo --> DB
+CitasRepo --> DB
+MedicosRepo --> DB
+PacientesRepo --> DB
+
+AuthService --> Cache
+CitasService --> Cache
+ReportesService --> FileStorage
+
+@enduml

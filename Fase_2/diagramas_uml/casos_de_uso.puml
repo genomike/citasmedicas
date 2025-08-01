@@ -1,0 +1,68 @@
+@startuml casos_de_uso
+!theme plain
+title Sistema de Gestión de Citas Médicas - Casos de Uso
+
+actor "Paciente" as P
+actor "Personal Administrativo" as PA
+actor "Médico" as M
+
+rectangle "Sistema de Citas Médicas" {
+    usecase "Registrar Usuario" as UC1
+    usecase "Iniciar Sesión" as UC2
+    usecase "Buscar Médico/Especialidad" as UC3
+    usecase "Verificar Disponibilidad" as UC4
+    usecase "Registrar Cita" as UC5
+    usecase "Consultar Citas" as UC6
+    usecase "Reprogramar Cita" as UC7
+    usecase "Cancelar Cita" as UC8
+    usecase "Generar Historia Clínica" as UC9
+    usecase "Gestionar Agenda Médica" as UC10
+    usecase "Verificar Seguro Médico" as UC11
+    usecase "Procesar Pago" as UC12
+    usecase "Generar Reportes" as UC13
+    usecase "Enviar Notificaciones" as UC14
+}
+
+' Relaciones Paciente
+P --> UC1
+P --> UC2
+P --> UC3
+P --> UC4
+P --> UC5
+P --> UC6
+P --> UC7
+P --> UC8
+
+' Relaciones Personal Administrativo
+PA --> UC2
+PA --> UC5
+PA --> UC6
+PA --> UC7
+PA --> UC8
+PA --> UC9
+PA --> UC10
+PA --> UC11
+PA --> UC12
+PA --> UC13
+PA --> UC14
+
+' Relaciones Médico
+M --> UC2
+M --> UC6
+M --> UC10
+M --> UC13
+
+' Dependencias extend
+UC5 ..> UC11 : <<extend>>
+UC5 ..> UC12 : <<extend>>
+UC5 ..> UC14 : <<extend>>
+
+' Dependencias include
+UC5 ..> UC4 : <<include>>
+UC7 ..> UC4 : <<include>>
+UC5 ..> UC2 : <<include>>
+UC6 ..> UC2 : <<include>>
+UC7 ..> UC2 : <<include>>
+UC8 ..> UC2 : <<include>>
+
+@enduml
