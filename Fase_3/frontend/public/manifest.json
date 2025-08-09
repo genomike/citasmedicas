@@ -1,15 +1,21 @@
 {
   "short_name": "Citas Médicas",
-  "name": "Sistema de Gestión de Citas Médicas",
+  "name": "Sistema de Gestión de Citas Médicas - Hospital Regional del Cusco",
+  "description": "Aplicación web progresiva para la gestión de citas médicas del Hospital Regional del Cusco",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "aceitunas.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait",
+  "theme_color": "#1976d2",
+  "background_color": "#ffffff",
+  "scope": "/",
+  "lang": "es",
+  "categories": ["medical", "health", "productivity"]
 }
